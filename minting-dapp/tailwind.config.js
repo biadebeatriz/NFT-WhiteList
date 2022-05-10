@@ -26,9 +26,9 @@ module.exports = {
           internal_border: colors.slate[200],
         },
         warning: {
-          txt: colors.slate[800],
-          bg: colors.yellow[400],
-          border: colors.yellow[500],
+          txt: colors.white,
+          bg: colors.violet[500],
+          border: colors.lime[900],
         },
         error: {
           txt: colors.red[500],
@@ -78,7 +78,7 @@ module.exports = {
         },
 
         // Mint widget
-        token_preview: colors.indigo[200],
+        token_preview: colors.violet[300],
       },
     },
   },

@@ -65,7 +65,7 @@ export default class Dapp extends React.Component<Props, State> {
     if (browserProvider?.isMetaMask !== true) {
       this.setError( 
         <>
-          We were not able to detect <strong>MetaMask</strong>. We value <strong>privacy and security</strong> a lot so we limit the wallet options on the DAPP.<br />
+          Nos não conseguimos detectar sua MetaMask <strong>MetaMask</strong>. Nos valorizamos <strong>sua privacidade e segurança</strong> a lot so we limit the wallet options on the DAPP.<br />
           <br />
           But don't worry! <span className="emoji">😃</span> You can always interact with the smart-contract through <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a> and <strong>we do our best to provide you with the best user experience possible</strong>, even from there.<br />
           <br />
@@ -93,7 +93,7 @@ export default class Dapp extends React.Component<Props, State> {
   async whitelistMintTokens(amount: number): Promise<void>
   {
     try {
-      await this.contract.whitelistMint(amount, Whitelist.getProofForAddress(this.state.userAddress!), {value: this.state.tokenPrice.mul(amount)});
+      await this.contract.whitelistMint(amount, {value: this.state.tokenPrice.mul(amount)});
     } catch (e) {
       this.setError(e);
     }
@@ -125,7 +125,7 @@ export default class Dapp extends React.Component<Props, State> {
 
     if (merkleProof.length < 1) {
       this.setState({
-        merkleProofManualAddressFeedbackMessage: 'The given address is not in the whitelist, please double-check.',
+        merkleProofManualAddressFeedbackMessage: ' Esse endereço não está na lista.',
       });
 
       return;
@@ -147,8 +147,8 @@ export default class Dapp extends React.Component<Props, State> {
       <>
         {this.isNotMainnet() ?
           <div className="not-mainnet">
-            You are not connected to the main network.
-            <span className="small">Current network: <strong>{this.state.network?.name}</strong></span>
+            Você não está conectado na MainNet!
+            <span className="small">Network Conectado: <strong>{this.state.network?.name}</strong></span>
           </div>
           : null}
 
@@ -202,11 +202,11 @@ export default class Dapp extends React.Component<Props, State> {
 
         {!this.isWalletConnected() || !this.isSoldOut() ?
           <div className="no-wallet">
-            {!this.isWalletConnected() ? <button className="primary" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Connect Wallet</button> : null}
+            {!this.isWalletConnected() ? <button className="primary" disabled={this.provider === undefined} onClick={() => this.connectWallet()}>Conectar Carteira</button> : null}
             
             <div className="use-block-explorer">
-              Hey, looking for a <strong>super-safe experience</strong>? <span className="emoji">😃</span><br />
-              You can interact with the smart-contract <strong>directly</strong> through <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a>, without even connecting your wallet to this DAPP! <span className="emoji">🚀</span><br />
+              Hey, você está procurando <strong>uma super mega experiência </strong>? <span className="emoji">😃</span><br />
+              Você pode interagir com o Smart-Contract <strong>diretamente</strong> através <a href={this.generateContractUrl()} target="_blank">{this.state.networkConfig.blockExplorer.name}</a>, sem conectar sua MetaMask com esse Dapp <span className="emoji">🚀</span><br />
               <br />
               Keep safe! <span className="emoji">❤️</span>
             </div>
@@ -215,12 +215,13 @@ export default class Dapp extends React.Component<Props, State> {
               <div className="merkle-proof-manual-address">
                 <h2>Whitelist Proof</h2>
                 <p>
-                  Anyone can generate the proof using any public address in the list, but <strong>only the owner of that address</strong> will be able to make a successful transaction by using it.
+
+                  Qualquer um pode gerar a prova usando qualquer endereço público na lista, porém <strong>mas apenas o dono da carteira</strong> será permitido a realizar uma transação bem sucedida ultilizando essa prova.
                 </p>
 
                 {this.state.merkleProofManualAddressFeedbackMessage ? <div className="feedback-message">{this.state.merkleProofManualAddressFeedbackMessage}</div> : null}
 
-                <label htmlFor="merkle-proof-manual-address">Public address:</label>
+                <label htmlFor="merkle-proof-manual-address">Endereço Público:</label>
                 <input id="merkle-proof-manual-address" type="text" placeholder="0x000..." disabled={this.state.userAddress !== null} value={this.state.userAddress ?? this.state.merkleProofManualAddress} ref={(input) => this.merkleProofManualAddressInput = input!} onChange={() => {this.setState({merkleProofManualAddress: this.merkleProofManualAddressInput.value})}} /> <button onClick={() => this.copyMerkleProofToClipboard()}>Generate and copy to clipboard</button>
               </div>
               : null}

@@ -34,12 +34,7 @@ async function main() {
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.whitelistSale.maxMintAmountPerTx)).wait();
   }
 
-  // Update root hash (if changed)
-  if ((await contract.merkleRoot()) !== rootHash) {
-    console.log(`Updating the root hash to: ${rootHash}`);
 
-    await (await contract.setMerkleRoot(rootHash)).wait();
-  }
   
   // Enable whitelist sale (if needed)
   if (!await contract.whitelistMintEnabled()) {

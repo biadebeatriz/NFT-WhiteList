@@ -4,14 +4,12 @@ pragma solidity >=0.8.9 <0.9.0;
 
 import 'erc721a/contracts/ERC721A.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
-import '@openzeppelin/contracts/utils/cryptography/MerkleProof.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
 contract MyCollection is ERC721A, Ownable, ReentrancyGuard {
 
   using Strings for uint256;
 
-  bytes32 public merkleRoot;
   mapping(address => bool) public whitelistClaimed;
 
   string public uriPrefix = '';
@@ -51,12 +49,10 @@ contract MyCollection is ERC721A, Ownable, ReentrancyGuard {
     _;
   }
 
-  function whitelistMint(uint256 _mintAmount, bytes32[] calldata _merkleProof) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) {
+  function whitelistMint(uint256 _mintAmount) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) {
     // Verify whitelist requirements
     require(whitelistMintEnabled, 'The whitelist sale is not enabled!');
     require(!whitelistClaimed[_msgSender()], 'Address already claimed!');
-    bytes32 leaf = keccak256(abi.encodePacked(_msgSender()));
-    require(MerkleProof.verify(_merkleProof, merkleRoot, leaf), 'Invalid proof!');
 
     whitelistClaimed[_msgSender()] = true;
     _safeMint(_msgSender(), _mintAmount);
@@ -145,9 +141,7 @@ contract MyCollection is ERC721A, Ownable, ReentrancyGuard {
     paused = _state;
   }
 
-  function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
-    merkleRoot = _merkleRoot;
-  }
+
 
   function setWhitelistMintEnabled(bool _state) public onlyOwner {
     whitelistMintEnabled = _state;
